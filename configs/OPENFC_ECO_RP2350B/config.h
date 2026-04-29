@@ -30,6 +30,21 @@
 #define BOARD_NAME        OPENFC_ECO_RP2350B
 #define MANUFACTURER_ID   OPFC
 
+// Overclock to 250 MHz @ VDD_CORE 1.15V.
+// RP2350 stock is 150 MHz; 250 MHz is widely reported stable in this band,
+// stays inside the pico-sdk VREG range (1.30V hard limit), and is a clean
+// 5x50 multiple so PLL_USB stays untouched. Cuts CPU load ~40%.
+#define PICO_OVERCLOCK_KHZ 250000
+
+// Enable USE_CHIRP — the BF chirp signal-injection path used for system ID.
+// Pilot triggers via BOXCHIRP aux switch; setpoint is excited with an
+// exponential frequency sweep on one axis at a time, gyro response captured
+// to blackbox via DEBUG_CHIRP debug mode. Foundation for OpenFC's on-board
+// post-flight PID identifier (Phase 2). Bench-safe when disarmed (no motor
+// output); in-flight chirp is intentional per upstream BF design. Set
+// `set debug_mode = CHIRP` and assign BOXCHIRP to an aux switch to use.
+#define USE_CHIRP
+
 // ------------------
 // Motor outputs (PIO DSHOT)
 // V0.3 hardware wires the ESC connector M1..M4 to GPIO31..GPIO28
@@ -80,7 +95,15 @@
 #define PIOUART1_RX_PIN      PA27
 
 // ------------------
-// SPI0: IMU (LSM6DSV16XTR)
+// SPI0: IMU (ICM-42688-P)
+// LSM6DSV16XTR was originally specified but found to have a MEMS resonance
+// vulnerability in the ~25 kRPM motor band on this airframe (the chip
+// internal gyro saturates from acoustic/vibration energy at the resonator's
+// drive frequency, producing bursts of false rotation reads up to chip
+// full-scale ±2000 dps). Swapping to ICM-42688-P (drop-in pin-compatible
+// per ST/TDK datasheets and confirmed by multiple BF targets that support
+// both chips on the same pads) eliminated the resonance issue. V0.4 PCB
+// will be designed with ICM-42688-P only.
 // ------------------
 
 #define SPI0_SCK_PIN         PA18
@@ -89,7 +112,8 @@
 
 #define USE_GYRO
 #define USE_ACC
-#define USE_ACCGYRO_LSM6DSV16X
+#define USE_GYRO_SPI_ICM42688P
+#define USE_ACC_SPI_ICM42688P
 #define GYRO_1_SPI_INSTANCE  SPI0
 #define GYRO_1_CS_PIN        PA14
 #define GYRO_1_EXTI_PIN      PA13
