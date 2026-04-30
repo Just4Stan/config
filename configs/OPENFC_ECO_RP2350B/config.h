@@ -45,6 +45,10 @@
 // `set debug_mode = CHIRP` and assign BOXCHIRP to an aux switch to use.
 #define USE_CHIRP
 
+// On-board chirp PID identifier (PR-D streaming). Diagnostic only —
+// suggests gains via CLI/MSP/OSD; pilot accepts manually.
+#define USE_SYSID
+
 // ------------------
 // Motor outputs (PIO DSHOT)
 // V0.3 hardware wires the ESC connector M1..M4 to GPIO31..GPIO28
