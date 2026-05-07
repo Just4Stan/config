@@ -88,6 +88,12 @@
 #define UART0_RX_PIN         PA1
 #define MSP_DISPLAYPORT_UART SERIAL_PORT_UART0
 
+// HD digital OSD canvas via MSP DisplayPort (DJI O4, HDZero, Walksnail).
+// PICO RP2350B target.h gates `#undef USE_OSD_HD` on BOARD_USE_OSD_HD; we
+// opt in here because UART0 is wired to a digital VTX. Adds ~2KB RAM (60x22
+// canvas + inverted shadow) and HD font tables to flash.
+#define BOARD_USE_OSD_HD
+
 #define UART1_TX_PIN         PA22
 #define UART1_RX_PIN         PA21
 
