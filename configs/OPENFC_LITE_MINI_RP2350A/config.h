@@ -97,8 +97,11 @@
 // Status LED (blue)
 #define LED0_PIN             PA26
 
-// 10V VTX/cam rail enable
+// 10V VTX/cam rail enable, active high. Inverted so pinioInit drives it high
+// at boot: the rail powers the VTX/air unit, which must come up without a
+// switch. Bind PINIO1_BOX to a mode only if switched rail control is wanted.
 #define PINIO1_PIN           PA27
+#define PINIO1_CONFIG        (PINIO_CONFIG_MODE_OUT_PP | PINIO_CONFIG_OUT_INVERTED)
 
 // ADC: ESC current on ADC2, VBAT on ADC3 (1k + 100nF RC on each)
 #define USE_ADC

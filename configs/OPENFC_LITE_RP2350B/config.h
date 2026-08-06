@@ -52,8 +52,11 @@
 #define USE_BEEPER
 #define BEEPER_PIN           PA7
 
-// 10V VTX/cam rail enable
+// 10V VTX/cam rail enable, active high. Inverted so pinioInit drives it high
+// at boot: the rail powers the VTX/air unit, which must come up without a
+// switch. Bind PINIO1_BOX to a mode only if switched rail control is wanted.
 #define PINIO1_PIN           PA11
+#define PINIO1_CONFIG        (PINIO_CONFIG_MODE_OUT_PP | PINIO_CONFIG_OUT_INVERTED)
 
 // Status LED (blue)
 #define LED0_PIN             PA12
